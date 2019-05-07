@@ -34,7 +34,7 @@ namespace AnimalShelter.Models
       conn.Close();
       if (conn != null)
       {
-       conn.Dispose();
+        conn.Dispose();
       }
     }
 
@@ -114,32 +114,52 @@ namespace AnimalShelter.Models
         DateTime dateOfAdmit = rdr.GetDateTime(4);
         int id = rdr.GetInt32(5);
 
-      //   if(!rdr.IsDBNull())
-      //   {
-      //     capitalId = rdr.GetInt32();
-      //   }
-      //
-      // if(!rdr.IsDBNull(12))
-      // {
-      //   if(rdr.GetString(12) == "")
-      //   {
-      //     headOfState = "The Lordess Almighty Reese Lee and her court jester minion Dustin";
-      //   }
-      // else
-      // {
-      //   headOfState = rdr.GetString(12);
-      // }
 
-          Animal newAnimal = new Animal(type, name, sex, breed, dateOfAdmit, id);
-          allAnimals.Add(newAnimal);
-        }
+        Animal newAnimal = new Animal(type, name, sex, breed, dateOfAdmit, id);
+        allAnimals.Add(newAnimal);
+      }
 
-        conn.Close();
+      conn.Close();
 
-        if (conn != null)
-        {
-          conn.Dispose();
-        }
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+
+      return allAnimals;
+
+    }
+    public static List<Animal> SortByType()
+    {
+      List<Animal> allAnimals = new List<Animal> {};
+
+
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"SELECT * FROM animals ORDER BY type ASC;";
+      MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+      while (rdr.Read())
+      {
+        string type = rdr.GetString(0);
+        string name = rdr.GetString(1);
+        string sex = rdr.GetString(2);
+        string breed = rdr.GetString(3);
+        DateTime dateOfAdmit = rdr.GetDateTime(4);
+        int id = rdr.GetInt32(5);
+
+
+        Animal newAnimal = new Animal(type, name, sex, breed, dateOfAdmit, id);
+        allAnimals.Add(newAnimal);
+      }
+
+      conn.Close();
+
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
 
       return allAnimals;
 

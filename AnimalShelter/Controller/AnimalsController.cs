@@ -29,6 +29,13 @@ namespace AnimalShelter.Controllers
       myAnimal.Save();
       return RedirectToAction("Index");
     }
+    [HttpGet("/animals/SortByType")]
+    public ActionResult SortByType()
+    {
+      // Animal newAnimal = new Animal();
+      List<Animal> allSortedAnimals = Animal.SortByType();
+      return View(allSortedAnimals);
+    }
 
     // [HttpGet("/animals/{animalId}")]
     // public ActionResult Show(string countryCode)
