@@ -74,26 +74,26 @@ namespace AnimalShelter.Tests
     //
     //   Assert.AreEqual(testId, result);
     // }
-    // 
-    // [TestMethod]
-    // public void GetAll_ReturnsItems_ItemList()
-    // {
-    //   //Arrange
-    //   Animal animalOne = new Animal("catto", "Judy", "f", "breed", "2019-05-01");
-    //   animalOne.Save();
-    //   Animal animalTwo = new Animal("doggo", "Terence", "m", "breed", "2019-05-01");
-    //   animalTwo.Save();
-    //   List<Animal> newList = new List<Animal> { animalOne, animalTwo };
-    //
-    //   //Act
-    //   List<Animal> result = Animal.GetAll();
-    //   foreach(Animal animal in result)
-    //   {
-    //     Console.WriteLine(animal.Name);
-    //   }
-    //   //Assert
-    //   CollectionAssert.AreEqual(newList, result);
-    // }
+
+    [TestMethod]
+    public void GetAll_ReturnsItems_ItemList()
+    {
+      //Arrange
+      Animal animalOne = new Animal("catto", "Judy", "f", "breed", new DateTime(2019,06,08));
+      animalOne.Save();
+      Animal animalTwo = new Animal("doggo", "Terence", "m", "breed", new DateTime(2019,06,08));
+      animalTwo.Save();
+      List<Animal> newList = new List<Animal> { animalOne, animalTwo };
+
+      //Act
+      List<Animal> result = Animal.GetAll();
+      foreach(Animal animal in result)
+      {
+        Console.WriteLine(animal.Name);
+      }
+      //Assert
+      CollectionAssert.AreEqual(newList, result);
+    }
 
     // [TestMethod]
     // public void GetId_ItemsInstantiateWithAnIdAndGetterReturns_Int()
