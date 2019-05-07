@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using AnimalShelter;
+using System;
 
 namespace AnimalShelter.Models
 {
@@ -10,16 +11,16 @@ namespace AnimalShelter.Models
     public string Name  { get; set; }
     public string Sex { get; set; }
     public string Breed { get; set; }
-    public string DateOfAdmittance { get; set; }
+    public DateTime DateOfAdmit { get; set; }
     public int Id { get; set; }
 
-    public Animal (string type, string name, string sex, string breed, string dateOfAdmittance, int id = 0)
+    public Animal (string type, string name, string sex, string breed, DateTime dateOfAdmit, int id = 0)
     {
       Type = type;
       Name = name;
       Sex = sex;
       Breed = breed;
-      DateOfAdmittance = dateOfAdmittance;
+      DateOfAdmit = dateOfAdmit;
       Id = id;
     }
 
@@ -37,40 +38,52 @@ namespace AnimalShelter.Models
       }
     }
 
+    public override bool Equals(System.Object otherAnimal)
+    {
+      if (!(otherAnimal is Animal))
+      {
+        return false;
+      }
+      else
+      {
+        Animal newAnimal = (Animal) otherAnimal;
+        bool descriptionEquality = (this.Name == newAnimal.Name);
+        return (descriptionEquality);
+      }
+    }
+
     public void Save()
     {
       MySqlConnection conn = DB.Connection();
       conn.Open();
       var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"INSERT INTO items (type, name, sex, breed, dateOfAdmittance) VALUES (@Animaltype, @AnimalName, @AnimalSex, @AnimalBreed, @AnimalDateOfAdmittance);";
+      cmd.CommandText = @"INSERT INTO `animals` (`type`, `name`, `sex`, `breed`, `dateOfAdmit`) VALUES (@Animaltype, @AnimalName, @AnimalSex, @AnimalBreed, @AnimalDateOfAdmit);";
       MySqlParameter type = new MySqlParameter();
       type.ParameterName = "@AnimalType";
       type.Value = this.Type;
-      cmd.Parameters.Add(type);
-     cmd.ExecuteNonQuery();
 
       MySqlParameter name = new MySqlParameter();
       name.ParameterName = "@AnimalName";
       name.Value = this.Name;
-      cmd.Parameters.Add(name);
-     cmd.ExecuteNonQuery();
 
       MySqlParameter sex = new MySqlParameter();
       sex.ParameterName = "@AnimalSex";
       sex.Value = this.Sex;
-      cmd.Parameters.Add(sex);
-     cmd.ExecuteNonQuery();
 
       MySqlParameter breed = new MySqlParameter();
       breed.ParameterName = "@AnimalBreed";
       breed.Value = this.Breed;
-      cmd.Parameters.Add(breed);
-     cmd.ExecuteNonQuery();
 
-      MySqlParameter dateOfAdmittance = new MySqlParameter();
-      dateOfAdmittance.ParameterName = "@AnimalDateOfAdmittance";
-      dateOfAdmittance.Value = this.DateOfAdmittance;
-      cmd.Parameters.Add(dateOfAdmittance);
+      MySqlParameter dateOfAdmit = new MySqlParameter();
+      dateOfAdmit.ParameterName = "@AnimalDateOfAdmit";
+      dateOfAdmit.Value = this.DateOfAdmit;
+
+
+      cmd.Parameters.Add(type);
+      cmd.Parameters.Add(name);
+      cmd.Parameters.Add(sex);
+      cmd.Parameters.Add(breed);
+      cmd.Parameters.Add(dateOfAdmit);
       cmd.ExecuteNonQuery();
       // more logic will go here
       Id = (int) cmd.LastInsertedId;
@@ -86,25 +99,26 @@ namespace AnimalShelter.Models
       List<Animal> allAnimals = new List<Animal> {};
 
 
-      // MySqlConnection conn = DB.Connection();
-      // conn.Open();
-      // MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-      // cmd.CommandText = @"SELECT * FROM animals;";
-      // MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
-      //
-      // while (rdr.Read())
-      // {
-      //   string type = rdr.GetString(0);
-      //   string name = rdr.GetString(1);
-      //   string sex = rdr.GetString(2);
-      //   string breed = rdr.GetString(3);
-      //   string dateOfAdmittance = rdr.GetString(4);
-      //
-      //   if(!rdr.IsDBNull(13))
-      //   {
-      //     capitalId = rdr.GetInt32(13);
-      //   }
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"SELECT * FROM animals;";
+      MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
 
+      while (rdr.Read())
+      {
+        string type = rdr.GetString(0);
+        string name = rdr.GetString(1);
+        string sex = rdr.GetString(2);
+        string breed = rdr.GetString(3);
+        DateTime dateOfAdmit = rdr.GetDateTime(4);
+        int id = rdr.GetInt32(5);
+
+      //   if(!rdr.IsDBNull())
+      //   {
+      //     capitalId = rdr.GetInt32();
+      //   }
+      //
       // if(!rdr.IsDBNull(12))
       // {
       //   if(rdr.GetString(12) == "")
@@ -116,17 +130,17 @@ namespace AnimalShelter.Models
       //   headOfState = rdr.GetString(12);
       // }
 
-      //     Country newCountry = new Country(countryName, countryCode, population, capitalId, headOfState);
-      //     allCountries.Add(newCountry);
-      //   }
-      //
-      //   conn.Close();
-      //
-      //   if (conn != null)
-      //   {
-      //     conn.Dispose();
-      //   }
-      //
+          Animal newAnimal = new Animal(type, name, sex, breed, dateOfAdmit, id);
+          allAnimals.Add(newAnimal);
+        }
+
+        conn.Close();
+
+        if (conn != null)
+        {
+          conn.Dispose();
+        }
+
       return allAnimals;
 
     }
