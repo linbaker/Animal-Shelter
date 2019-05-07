@@ -61,19 +61,19 @@ namespace AnimalShelter.Tests
       CollectionAssert.AreEqual(newList, newListTwo);
     }
 
-    // [TestMethod]
-    // public void Save_AssignsIdToObject_Id()
-    // {
-    //   Animal testAnimal = new Animal("type", "name", "m", "breed", "2019-05-01");
-    //
-    //   testAnimal.Save();
-    //   Animal savedAnimal = Animal.GetAll()[0];
-    //
-    //   int result = savedAnimal.Id;
-    //   int testId = testAnimal.Id;
-    //
-    //   Assert.AreEqual(testId, result);
-    // }
+    [TestMethod]
+    public void Save_AssignsIdToObject_Id()
+    {
+      Animal testAnimal = new Animal("type", "name", "m", "breed", new DateTime(2019,06,08));
+
+      testAnimal.Save();
+      Animal savedAnimal = Animal.GetAll()[0];
+
+      int result = savedAnimal.Id;
+      int testId = testAnimal.Id;
+
+      Assert.AreEqual(testId, result);
+    }
 
     [TestMethod]
     public void GetAll_ReturnsItems_ItemList()
